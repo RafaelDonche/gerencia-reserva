@@ -34,8 +34,10 @@ CREATE TABLE reservas (
 	fim datetime NOT NULL,
     recepcao int,
     coffe_break varchar(50),
+    espaco_id int unsigned NOT NULL,
 	created timestamp DEFAULT CURRENT_TIMESTAMP,
-	modified timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+	modified timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (espaco_id) REFERENCES espacos(id) ON DELETE CASCADE
 );
 
 CREATE TABLE reservas_adicionals (
@@ -59,11 +61,12 @@ values ('Flipcharts'),
 ('Telão de fundo para palco'),
 ('Placas de mesa');
 
-insert into reservas (cliente_nome, cliente_cpf, inicio, fim, recepcao, coffe_break)
-values ('Angela Bauhs', '32165498701', '2024-12-22 13:00:00', '2024-12-22 16:30:00', 3, 'Tradicional');
+insert into reservas (cliente_nome, cliente_cpf, inicio, fim, recepcao, coffe_break, espaco_id)
+values ('Angela Bauhs', '32165498701', '2024-12-22 13:00:00', '2024-12-22 16:30:00', 3, 'Tradicional', 1);
 
 insert into reservas_adicionals (reserva_id, adicional_id)
 values (1, 1),
 (1, 3);
+
 
 
