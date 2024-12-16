@@ -1,48 +1,88 @@
-# CakePHP
+# Projeto CakePHP 2.x
 
-[![Latest Stable Version](https://poser.pugx.org/cakephp/cakephp/v/stable.svg)](https://packagist.org/packages/cakephp/cakephp)
-[![License](https://poser.pugx.org/cakephp/cakephp/license.svg)](https://packagist.org/packages/cakephp/cakephp)
-[![Bake Status](https://secure.travis-ci.org/cakephp/cakephp.png?branch=master)](https://travis-ci.org/cakephp/cakephp)
-[![Code consistency](https://squizlabs.github.io/PHP_CodeSniffer/analysis/cakephp/cakephp/grade.svg)](https://squizlabs.github.io/PHP_CodeSniffer/analysis/cakephp/cakephp/)
+Este é um sistema desenvolvido em CakePHP 2.x para o gerenciamento de reservas dos espaços disponíveis.
 
-CakePHP is a rapid development framework for PHP which uses commonly known design patterns like Active Record, Association Data Mapping, Front Controller and MVC.
-Our primary goal is to provide a structured framework that enables PHP users at all levels to rapidly develop robust web applications, without any loss to flexibility.
+## Instalação do Projeto
 
+## Pré-requisitos
 
-## Some Handy Links
+Antes de começar, certifique-se de ter as seguintes ferramentas instaladas em sua máquina:
 
-[CakePHP](https://cakephp.org) - The rapid development PHP framework
+- **PHP** (versão 5.6 ou superior compatível com CakePHP 2.x)
+- **Composer** (para gerenciar dependências do projeto)
+- **MySQL** (ou outro banco de dados compatível)
+- **Servidor Web** (Apache com mod_rewrite habilitado ou equivalente)
+- **Git** (para clonar o repositório)
 
-[CookBook](https://book.cakephp.org) - THE CakePHP user documentation; start learning here!
+### 1. Clonando o Repositório
 
-[API](https://api.cakephp.org) - A reference to CakePHP's classes
+Execute o seguinte comando para clonar o projeto:
 
-[Plugins](https://plugins.cakephp.org) - A repository of extensions to the framework
+```bash
+git clone https://github.com/RafaelDonche/gerencia-reserva
+```
 
-[The Bakery](https://bakery.cakephp.org) - Tips, tutorials and articles
+### 2. Configuração do Banco de Dados
 
-[Community Center](https://community.cakephp.org) - A source for everything community related
+1. Utilizando o banco MySQL, rode o conteúdo do arquivo **database-script.sql** no seu banco de dados.
 
-[Training](https://training.cakephp.org) - Join a live session and get skilled with the framework
+2. Configure o arquivo `app/Config/database.php` com as credenciais do banco de dados. Um exemplo de configuração pode ser:
 
-[CakeFest](https://cakefest.org) - Don't miss our annual CakePHP conference
+```php
+class DATABASE_CONFIG {
+    public $default = array(
+        'datasource' => 'Database/Mysql',
+        'persistent' => false,
+        'host' => 'localhost',
+        'login' => 'root',
+        'password' => '',
+        'database' => 'gerenciareserva',
+        'prefix' => '',
+        'encoding' => 'utf8',
+    );
+}
+```
 
-[Cake Software Foundation](https://cakefoundation.org) - Promoting development related to CakePHP
+### 3. Configuração do CakePHP
 
+Certifique-se de que o diretório `app/tmp` e todos os seus subdiretórios têm permissão de escrita.
 
-## Get Support!
+```bash
+chmod -R 777 app/tmp
+```
 
-[#cakephp](https://webchat.freenode.net/?channels=#cakephp) on irc.freenode.net - Come chat with us, we have cake
+### 4. Instalando Dependências
 
-[Google Group](https://groups.google.com/group/cake-php) - Community mailing list and forum
+Instale as dependências do projeto com o Composer:
 
-[GitHub Issues](https://github.com/cakephp/cakephp/issues) - Got issues? Please tell us!
+```bash
+composer install
+```
 
-[Roadmaps](https://github.com/cakephp/cakephp/wiki#roadmaps) - Want to contribute? Get involved!
+### 5. Configurando o Servidor
 
+1. Configure seu servidor web para apontar para o diretório `app/webroot` como raiz do projeto.
 
-## Contributing
+### 6. Acessando o Sistema
 
-[CONTRIBUTING.md](CONTRIBUTING.md) - Quick pointers for contributing to the CakePHP project
+Abra o navegador e acesse o sistema:
 
-[CookBook "Contributing" Section (2.x)](https://book.cakephp.org/2.0/en/contributing.html) [(3.x)](https://book.cakephp.org/3.0/en/contributing.html) - Version-specific details about contributing to the project
+```
+http://localhost/gerencia-reserva
+```
+
+## Funcionalidades Principais
+
+### Autenticação
+- O login do sistema será realizada por um único usuário já existente no banco de dados:
+- Nome: Administrador
+- Senha: 123456
+
+### Gerenciamento de Reservas e Espaços
+- Criação, listagem, edição e exclusão de reservas e espaços.
+- Definição de estruturas e serviços adicionais (checkboxes e selects dinâmicos).
+- Regras para evitar conflitos de horários e respeitar o horário de funcionamento dos espaços.
+
+-----------
+
+**Autor:** Rafael Donche
