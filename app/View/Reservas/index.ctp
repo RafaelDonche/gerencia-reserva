@@ -132,13 +132,6 @@
 								<td>
 									<?php
 										echo $this->Html->link(
-											'PDF',
-											array('action' => 'edit', $reserva['Reserva']['id']),
-											array('class' => 'btn btn-info m-1'),
-										);
-									?>
-									<?php
-										echo $this->Html->link(
 											'Editar',
 											array('action' => 'edit', $reserva['Reserva']['id']),
 											array('class' => 'btn btn-secondary m-1'),
