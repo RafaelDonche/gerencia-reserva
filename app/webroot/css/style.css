@@ -102,3 +102,7 @@ h4 {
 h4 {
     color: rgb(22, 22, 180) !important;
 }
+
+.checkbox input[type="checkbox"] {
+    margin-right: 0.6rem !important;
+}

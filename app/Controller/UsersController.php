@@ -1,20 +1,22 @@
 <?php
 
-class UsersController extends Controller {
+App::uses('AppController', 'Controller');
 
-	public function index() {
-		App::uses('Security', 'Utility');
+class UsersController extends AppController {
+	public $layout = 'login';
 
-		// Substitua 'minha_senha' pela senha desejada.
-		$senha = '123456';
+    public function login() {
+        if ($this->request->is('post')) {
+            if ($this->Auth->login()) {
+                // Redireciona para a página inicial ou a página que tentou acessar
+                return $this->redirect($this->Auth->redirectUrl());
+            } else {
+                $this->Session->error('Nome de usuário ou senha inválidos.');
+            }
+        }
+    }
 
-		// Substitua 'seu_salt_aqui' pelo valor do 'Security.salt' do arquivo Config/core.php.
-		$salt = 'DYhG9FOgj1pfIxfs2guhs9LbWwvniR2G0FgaC9mi';
-
-		// Gerar o hash
-		$hash = Security::hash($senha, 'sha1', $salt);
-		echo $hash;
-	}
+    public function logout() {
+        return $this->redirect($this->Auth->logout());
+    }
 }
-
-?>

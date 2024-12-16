@@ -7,7 +7,7 @@ class Adicional extends AppModel {
             'joinTable' => 'reservas_adicionals',
             'foreignKey' => 'adicional_id',
             'associationForeignKey' => 'reserva_id',
-            'unique' => false,
+            'unique' => true,
         ]
     ];
 }

@@ -99,13 +99,6 @@
 								<td>
 									<?php
 										echo $this->Html->link(
-											'Ver',
-											array('action' => 'edit', $espaco['Espaco']['id']),
-											array('class' => 'btn btn-info m-1'),
-										);
-									?>
-									<?php
-										echo $this->Html->link(
 											'Editar',
 											array('action' => 'edit', $espaco['Espaco']['id']),
 											array('class' => 'btn btn-secondary m-1'),

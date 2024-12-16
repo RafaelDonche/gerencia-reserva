@@ -27,11 +27,21 @@
 					'class' => 'form-control cpf'
 				));
 			?>
-			<div class="col-md-6 mb-3">
+			<div class="col-md-4 mb-3">
+				<label class="form-label" for="ReservaEspacoId">Espaço</label>
+				<select class="form-control" name="data[Reserva][espaco_id]">
+					<?php
+						foreach ($espacos as $id => $endereco) {
+							echo '<option value="'.$id.'">'.$endereco.'</option>';
+						}
+					?>
+				</select>
+			</div>
+			<div class="col-md-4 mb-3">
 				<label class="form-label" for="ReservaInicio">Início da reserva</label>
 				<input class="form-control" type="datetime-local" name="data[Reserva][inicio]">
 			</div>
-			<div class="col-md-6 mb-3">
+			<div class="col-md-4 mb-3">
 				<label class="form-label" for="ReservaFim">Fim da reserva</label>
 				<input class="form-control" type="datetime-local" name="data[Reserva][fim]">
 			</div>
@@ -53,30 +63,14 @@
 						'class' => 'form-control'
 					)
 				);
-			?>
-			<div class="col-md-12 mb-3">
-				<label class="form-label">Estruturas adicionais</label>
-				<div class="mx-3">
-					<?php
-						foreach ($estruturas as $id => $nome) {
-							echo '<label class="form-check form-check-inline">
-								<input class="form-check-input" type="checkbox" name="data[Adicional][Adicional][]" value="'.$id.'">
-								<span class="form-check-label">
-								'.$nome.'
-								</span>
-							</label>';
-						}
-					?>
-				</div>
-			</div>
-			<?php
-				// echo $this->Form->input('Adicional.Adicional', array(
-				// 	'type' => 'select',
-				// 	'multiple' => 'checkbox',
-				// 	'options' => $estruturas,
-				// 	'div' => array('class' => 'col-md-12'),
-				// 	// 'label' => array('class' => 'form-check', 'text' => 'Estruturas adicionais')
-				// ));
+				echo $this->Form->input('Adicional.Adicional', [
+					'type' => 'select',
+					'multiple' => 'checkbox',
+					'label' => 'Estruturas adicionais',
+					'options' => $estruturas,
+					'div' => array('class' => 'col-md-12 mb-3'),
+					'class' => 'checkbox mx-3'
+				]);
 				echo $this->Form->end(array(
 					'label' => 'Salvar',
 					'div' => array('class' => 'col-md-12'),
@@ -97,6 +91,7 @@
 					<table class="table">
 						<thead class="thead-light">
 							<tr>
+								<th>Espaço</th>
 								<th>Cliente</th>
 								<th>Data e horário <br> reservado</th>
 								<th>Serviços</th>
@@ -108,6 +103,9 @@
 						<tbody>
 						<?php foreach ($reservas as $reserva): ?>
 							<tr>
+								<td>
+									<?php echo $reserva['Espaco']['endereco']; ?>
+								</td>
 								<td>
 									Nome: <?php echo $reserva['Reserva']['cliente_nome']; ?> <br>
 									CPF: <span class="cpf"><?php echo $reserva['Reserva']['cliente_cpf']; ?></span>
@@ -134,7 +132,7 @@
 								<td>
 									<?php
 										echo $this->Html->link(
-											'Ver',
+											'PDF',
 											array('action' => 'edit', $reserva['Reserva']['id']),
 											array('class' => 'btn btn-info m-1'),
 										);

@@ -9,22 +9,22 @@ class Reserva extends AppModel {
             'joinTable' => 'reservas_adicionals',
             'foreignKey' => 'reserva_id',
             'associationForeignKey' => 'adicional_id',
-            'unique' => false,
+            'unique' => true,
         ]
     ];
 
 	public $validate = array(
 		'espaco_id' => array(
             'rule' => 'notBlank',
-			'message' => 'Este campo é obrigatório.'
+			'message' => 'O campo espaço é obrigatório.'
 		),
         'cliente_nome' => array(
             'rule' => 'notBlank',
-			'message' => 'Este campo é obrigatório.'
+			'message' => 'O campo nome do cliente é obrigatório.'
         ),
         'cliente_cpf' => array(
             'rule' => 'notBlank',
-			'message' => 'Este campo é obrigatório.'
+			'message' => 'O campo CPF do cliente é obrigatório.'
         ),
         'inicio' => array(
             'rule' => 'validateHorario',
@@ -32,14 +32,16 @@ class Reserva extends AppModel {
         ),
         'fim' => array(
             'rule' => 'notBlank',
-			'message' => 'Este campo é obrigatório.'
+			'message' => 'O campo fim da reserva é obrigatório.'
 		)
     );
 
 	public function validateHorario($check) {
-        $inicio = $this->data[$this->alias]['inicio']; // Horário de início da reserva
-        $fim = $this->data[$this->alias]['fim'];       // Horário de término da reserva
-        $espacoId = $this->data[$this->alias]['espaco_id']; // ID do espaço associado
+		$reserva = $this->data[$this->alias];
+        $inicio = $reserva['inicio'];
+        $fim = $reserva['fim'];
+        $espacoId = $reserva['espaco_id'];
+		$reservaId = isset($reserva['id']) ? $reserva['id'] : null;
 
         // Busca o horário de funcionamento do espaço
         $espaco = $this->Espaco->find('first', [
@@ -52,8 +54,8 @@ class Reserva extends AppModel {
             return false; // Espaço inválido
         }
 
-        $horaInicioEspaco = $espaco['Espaco']['hora_inicio']; // Ex.: '08:00:00'
-        $horaFimEspaco = $espaco['Espaco']['hora_fim'];       // Ex.: '22:00:00'
+        $horaInicioEspaco = $espaco['Espaco']['hora_inicio'];
+        $horaFimEspaco = $espaco['Espaco']['hora_fim'];
 
         // Verifica se a reserva está dentro do horário de funcionamento
         if (!$this->isWithinOperatingHours($inicio, $fim, $horaInicioEspaco, $horaFimEspaco)) {
@@ -64,19 +66,24 @@ class Reserva extends AppModel {
         $inicioComPreparacao = date('Y-m-d H:i:s', strtotime($inicio . ' -1 hour'));
         $fimComPreparacao = date('Y-m-d H:i:s', strtotime($fim . ' +1 hour'));
 
-        // Verifica se há conflito com outras reservas no mesmo espaço
-        $conflito = $this->find('count', [
-            'conditions' => [
-                'Reserva.espaco_id' => $espacoId,
-                'OR' => [
-                    // A nova reserva começa ou termina dentro de uma reserva existente
-                    [
-                        'Reserva.inicio <=' => $fimComPreparacao,
-                        'Reserva.fim >=' => $inicioComPreparacao
-                    ]
-                ]
-            ]
-        ]);
+		// Consulta para verificar se há conflitos de horários para o mesmo espaço
+		$conditions = [
+			'Reserva.espaco_id' => $reserva['espaco_id'], // Espaço associado
+			'OR' => [
+				['Reserva.inicio <=' => $inicioComPreparacao, 'Reserva.fim >=' => $inicioComPreparacao], // Conflito de início
+				['Reserva.inicio <=' => $fimComPreparacao, 'Reserva.fim >=' => $fimComPreparacao], // Conflito de fim
+				['Reserva.inicio >=' => $inicioComPreparacao, 'Reserva.fim <=' => $fimComPreparacao] // Dentro do intervalo
+			]
+		];
+
+		// Exclui a reserva atual da verificação (em caso de edição)
+		if ($reservaId) {
+			$conditions['Reserva.id !='] = $reservaId;
+		}
+
+		$conflito = $this->find('count', [
+			'conditions' => $conditions
+		]);
 
         return $conflito == 0;
     }

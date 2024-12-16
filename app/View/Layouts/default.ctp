@@ -1,6 +1,5 @@
 <?php
-	$uri = $_SERVER['REQUEST_URI'];
-
+	$uri = $this->params['controller'];
 ?>
 <!DOCTYPE html>
 <html lang="pt">
@@ -27,16 +26,16 @@
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-center" style="width: 100%;">
 			<?php
 				echo $this->Html->link(
-					'Espacos',
-					array('controller' => 'espacos', 'action' => 'index'),
-					strpos($uri, 'espacos') !== false ? array('class' => 'nav-link link-active') : array('class' => 'nav-link')
+					'Reservas',
+					array('controller' => 'reservas', 'action' => 'index'),
+					$uri == 'reservas' ? array('class' => 'nav-link link-active') : array('class' => 'nav-link')
 				);
 			?>
 			<?php
 				echo $this->Html->link(
-					'Reservas',
-					array('controller' => 'reservas', 'action' => 'index'),
-					strpos($uri, 'reservas') !== false ? array('class' => 'nav-link link-active') : array('class' => 'nav-link')
+					'Espaços',
+					array('controller' => 'espacos', 'action' => 'index'),
+					$uri == 'espacos' ? array('class' => 'nav-link link-active') : array('class' => 'nav-link')
 				);
 			?>
         </nav>

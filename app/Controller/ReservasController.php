@@ -6,15 +6,15 @@ class ReservasController extends AppController {
 	public $uses = ['Reserva', 'Adicional'];
 
     public function index() {
-		// Busca todas as estruturas para o select
 		$estruturas = $this->Reserva->Adicional->find('list', [
-			'fields' => ['Adicional.id', 'Adicional.nome'] // Assume que a tabela `estruturas` tem um campo `nome`
+			'fields' => ['Adicional.id', 'Adicional.nome']
 		]);
 
-		// Envia para a View
-		// $this->set(compact('estruturas'));
+		$espacos = $this->Reserva->Espaco->find('list', [
+			'fields' => ['Espaco.id', 'Espaco.endereco']
+		]);
 
-        $this->set(array('reservas' => $this->Reserva->find('all'), 'estruturas' => $estruturas));
+        $this->set(array('reservas' => $this->Reserva->find('all'), 'estruturas' => $estruturas, 'espacos' => $espacos));
     }
 
 	public function view($id = null) {
@@ -35,36 +35,62 @@ class ReservasController extends AppController {
 			$data = $this->request->data;
 			$data['Reserva']['cliente_cpf'] = preg_replace('/[^0-9]/', '', $data['Reserva']['cliente_cpf']);
             if ($this->Reserva->save($data)) {
+				$this->request->data = [];
                 $this->Flash->success(__('Cadastrado com sucesso.'));
                 return $this->redirect(array('action' => 'index'));
             }
-            $this->Flash->error(__('Não foi possível salvar.'));
-			$this->redirect($this->referer());
+
+			foreach ($this->Reserva->validationErrors as $erro) {
+				foreach ($erro as $mensagem) {
+					$this->Flash->error(__($mensagem));
+				}
+			}
+			return $this->redirect(array('action' => 'index'));
         }
     }
 
 	public function edit($id = null) {
-		if (!$id) {
-			throw new NotFoundException(__('Item não encontrado.'));
-		}
-
-		$reserva = $this->Reserva->findById($id);
-		if (!$reserva) {
+		if (!$id || !$this->Reserva->exists($id)) {
 			throw new NotFoundException(__('Item não encontrado.'));
 		}
 
 		if ($this->request->is(array('post', 'put'))) {
 			$this->Reserva->id = $id;
-			if ($this->Reserva->save($this->request->data)) {
+
+			$data = $this->request->data;
+			$data['Reserva']['id'] = $id;
+			$data['Reserva']['cliente_cpf'] = preg_replace('/[^0-9]/', '', $data['Reserva']['cliente_cpf']);
+
+			// debug($data);
+			// die();
+
+            if ($this->Reserva->save($data)) {
 				$this->Flash->success(__('Atualizado com sucesso.'));
 				return $this->redirect(array('action' => 'index'));
 			}
-			$this->Flash->error(__('Não foi possível salvar.'));
 		}
+
+		foreach ($this->Reserva->validationErrors as $erro) {
+			foreach ($erro as $mensagem) {
+				$this->Flash->error(__($mensagem));
+			}
+		}
+
+		$reserva = $this->Reserva->findById($id);
 
 		if (!$this->request->data) {
 			$this->request->data = $reserva;
 		}
+
+		$estruturas = $this->Reserva->Adicional->find('list', [
+			'fields' => ['Adicional.id', 'Adicional.nome']
+		]);
+
+		$espacos = $this->Reserva->Espaco->find('list', [
+			'fields' => ['Espaco.id', 'Espaco.endereco']
+		]);
+
+        $this->set(compact('reserva', 'estruturas', 'espacos'));
 	}
 
 	public function delete($id) {

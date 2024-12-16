@@ -31,4 +31,40 @@ App::uses('Controller', 'Controller');
  * @link		https://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
 class AppController extends Controller {
+	public $components = array(
+        'Flash',
+        'Auth' => array(
+            'authenticate' => array(
+                'Form' => array(
+                    'fields' => array(
+                        'username' => 'username',
+                        'password' => 'password'
+                    ),
+                    'userModel' => 'User', // Nome do Model relacionado
+                )
+            ),
+            'loginAction' => array(
+                'controller' => 'users',
+                'action' => 'login'
+            ),
+            'loginRedirect' => array(
+                'controller' => 'reservas', // Página inicial após login
+                'action' => 'index'
+            ),
+            'logoutRedirect' => array(
+                'controller' => 'users',
+                'action' => 'login'
+            ),
+            'authError' => 'Você precisa estar logado para acessar esta página.',
+            'flash' => array(
+                'element' => 'default',
+                'key' => 'auth',
+                'params' => array()
+            )
+        )
+    );
+
+    public function beforeFilter() {
+        $this->Auth->allow('login'); // Permitir acesso à página de login sem autenticação
+    }
 }

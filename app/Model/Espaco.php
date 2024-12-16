@@ -18,11 +18,11 @@ class Espaco extends AppModel {
 	public $validate = array(
         'endereco' => array(
             'rule' => 'notBlank',
-			'message' => 'Este campo é obrigatório.'
+			'message' => 'O campo endereço é obrigatório.'
         ),
         'lotacao' => array(
             'rule' => 'naturalNumber',
-			'message' => 'Este campo deve ser um número inteiro.'
+			'message' => 'O campo limite de participantes deve ser um número inteiro.'
         )
     );
 }
