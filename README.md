@@ -1,10 +1,8 @@
-# Projeto CakePHP 2.x
+# Projeto: Gerenciamento de Reservas
 
-Este é um sistema desenvolvido em CakePHP 2.x para o gerenciamento de reservas dos espaços disponíveis.
+Este é um sistema desenvolvido em CakePHP 2.x para o gerenciamento de reservas e espaços disponíveis.
 
 ## Instalação do Projeto
-
-## Pré-requisitos
 
 Antes de começar, certifique-se de ter as seguintes ferramentas instaladas em sua máquina:
 
